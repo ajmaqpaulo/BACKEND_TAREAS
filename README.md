@@ -32,4 +32,5 @@ El proyecto utiliza **axios** para el manejo de peticiones y funcionamiento del 
 npm install
 
 Compilación del proyecto
+
 npm run dev 

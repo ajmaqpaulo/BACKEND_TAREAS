@@ -8,12 +8,14 @@ export interface Estado_Editar_DTO {
     color?: string;
 }
 
+// Forma real del recordset SQL Server (UPPERCASE).
+// El frontend recibe los campos tal cual.
 export interface Estado_Detalle_DTO {
-    id: string;
-    nombre: string;
-    color: string;
-    orden: number;
-    es_defecto: boolean;
-    esta_activo: boolean;
-    creado_en: string;
+    ID: string;
+    NOMBRE: string;
+    COLOR: string;
+    ORDEN: number;
+    ES_DEFECTO: boolean;
+    ESTA_ACTIVO: boolean;
+    CREADO_EN: string;
 }

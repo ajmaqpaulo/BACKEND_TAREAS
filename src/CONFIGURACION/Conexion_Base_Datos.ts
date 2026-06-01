@@ -2,7 +2,7 @@ import sql from "mssql";
 
 const configuracion: sql.config = {
     server: process.env.BD_SERVIDOR || "",
-    port: parseInt(process.env.BD_PUERTO || ""),
+    port: parseInt(process.env.BD_PUERTO || "1433", 10),
     database: process.env.BD_NOMBRE || "",
     user: process.env.BD_USUARIO || "",
     password: process.env.BD_CONTRASENA || "",

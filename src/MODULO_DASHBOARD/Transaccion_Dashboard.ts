@@ -95,6 +95,13 @@ export class Transaccion_Dashboard {
             .query(`INSERT INTO HISTORIAL_TAREA (TAREA_ID, ACCION, REALIZADO_POR) VALUES (@TID, 'EDITADA', @POR2)`);
     }
 
+    async obtener_estado_por_nombre(nombre: string): Promise<string | null> {
+        const p = await this.pool();
+        const r = await p.request().input("N", sql.NVarChar, nombre)
+            .query(`SELECT ID FROM ESTADO_TAREA WHERE NOMBRE = @N AND ELIMINADO_EN IS NULL`);
+        return r.recordset[0]?.ID ?? null;
+    }
+
     async eliminar_tarea_directa(id: string, por: string) {
         const p = await this.pool();
         await p.request().input("ID", sql.UniqueIdentifier, id).input("POR", sql.UniqueIdentifier, por)

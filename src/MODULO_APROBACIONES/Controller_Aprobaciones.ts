@@ -30,6 +30,19 @@ router.get("/", Middleware_Auth, Requiere_Permiso("APROBAR_SOLICITUDES"), async 
     } catch (e: any) { res.status(500).json(respuesta(false, e.message)); }
 });
 
+// ═══════════════════════════════════════════════════════
+// USUARIO ESTÁNDAR — Mis solicitudes
+// (DEBE ir ANTES de "/:id" para que Express no matchee "mis-solicitudes" como :id)
+// ═══════════════════════════════════════════════════════
+
+// Ver mis solicitudes (todas o filtrado por estado)
+router.get("/mis-solicitudes/listar", Middleware_Auth, async (req: Request, res: Response) => {
+    try {
+        const datos = await negocio.mis_solicitudes(req.usuario!, req.query.estado_solicitud as string);
+        res.json(respuesta(true, "Mis solicitudes obtenidas", datos));
+    } catch (e: any) { res.status(500).json(respuesta(false, e.message)); }
+});
+
 // Detalle de una solicitud
 router.get("/:id", Middleware_Auth, async (req: Request, res: Response) => {
     try { res.json(respuesta(true, "Detalle obtenido", await negocio.obtener_detalle(req.params.id))); }
@@ -50,18 +63,6 @@ router.post("/:id/rechazar", Middleware_Auth, Requiere_Permiso("RECHAZAR_SOLICIT
         const resultado = await negocio.rechazar(req.params.id, req.body.motivo, req.usuario!);
         res.json(respuesta(true, resultado.mensaje, resultado));
     } catch (e: any) { res.status(400).json(respuesta(false, e.message)); }
-});
-
-// ═══════════════════════════════════════════════════════
-// USUARIO ESTÁNDAR — Mis solicitudes
-// ═══════════════════════════════════════════════════════
-
-// Ver mis solicitudes (todas o filtrado por estado)
-router.get("/mis-solicitudes/listar", Middleware_Auth, async (req: Request, res: Response) => {
-    try {
-        const datos = await negocio.mis_solicitudes(req.usuario!, req.query.estado_solicitud as string);
-        res.json(respuesta(true, "Mis solicitudes obtenidas", datos));
-    } catch (e: any) { res.status(500).json(respuesta(false, e.message)); }
 });
 
 // Reenviar solicitud rechazada (con correcciones)

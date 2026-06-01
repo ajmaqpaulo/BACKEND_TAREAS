@@ -9,8 +9,19 @@ import { crear_servidor } from "./Server";
 const PUERTO = parseInt(process.env.PUERTO || "5000");
 const USAR_HTTPS = process.env.USAR_HTTPS === "true";
 
+function validar_entorno() {
+    const requeridos = ["JWT_SECRETO", "BD_SERVIDOR", "BD_NOMBRE", "BD_USUARIO"];
+    const faltantes = requeridos.filter((k) => !process.env[k] || process.env[k]!.trim() === "");
+    if (faltantes.length) {
+        console.error(`[TAREAS] Faltan variables de entorno: ${faltantes.join(", ")}`);
+        console.error("[TAREAS] Copiá .env.example a .env y completá los valores.");
+        process.exit(1);
+    }
+}
+
 async function iniciar() {
     try {
+        validar_entorno();
         await Conexion_BD.obtener().conectar();
 
         const app = crear_servidor();

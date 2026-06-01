@@ -84,10 +84,9 @@ export class Negocio_Dashboard {
         const tarea = await this.obtener_tarea(tarea_id);
 
         if (usuario.rol_codigo === "ADMIN" || usuario.rol_codigo === "SUPERVISOR") {
-            // Completar directamente: buscar estado "Completada"
-            await this.tx.editar_tarea_directa(tarea_id, { estado_id: undefined }, usuario.usuario_id);
-            // Nota: el cambio real de estado a "Completada" se hace en el SP al aprobar.
-            // Para directo, actualizamos el estado manualmente
+            const estado_completada = await this.tx.obtener_estado_por_nombre("Completada");
+            if (!estado_completada) throw new Error("Estado 'Completada' no configurado en el sistema");
+            await this.tx.editar_tarea_directa(tarea_id, { estado_id: estado_completada }, usuario.usuario_id);
             await Servicio_Auditoria.registrar({ usuario, accion: "COMPLETAR_TAREA", entidad: "TAREA", entidad_id: tarea_id, datos_anteriores: tarea });
             return { tipo: "TAREA", id: tarea_id };
         }
